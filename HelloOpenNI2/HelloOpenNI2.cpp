@@ -15,6 +15,37 @@ void main(int argc, char* argv[])
             throw std::runtime_error("can't open device");
         }
 
+		// ColorƒJƒƒ‰‚Ìî•ñ‚ğæ“¾
+		const auto colorInfo = device.getSensorInfo(openni::SensorType::SENSOR_COLOR);
+		const openni::Array<openni::VideoMode> &colorVideoMode = colorInfo->getSupportedVideoModes();
+		
+		std::stringstream ss;
+		char tmp[256];
+
+		ss << " width,height,   fps,format:" << std::endl;
+		for(int i=0; i<colorVideoMode.getSize(); i++)
+		{
+			sprintf(tmp, "%6d,%6d,%6d,%6d",
+			colorVideoMode[i].getResolutionX(),
+			colorVideoMode[i].getResolutionY(),
+			colorVideoMode[i].getFps(),
+			colorVideoMode[i].getPixelFormat());
+			ss << tmp <<std::endl;
+		}
+		// DepthƒJƒƒ‰‚Ìî•ñ‚ğæ“¾
+		auto depthInfo = device.getSensorInfo(openni::SensorType::SENSOR_DEPTH);
+		const openni::Array<openni::VideoMode> &depthVideoMode = depthInfo->getSupportedVideoModes();
+		for(int i=0; i<depthVideoMode.getSize(); i++)
+		{
+			sprintf(tmp, "%6d,%6d,%6d,%6d",
+			depthVideoMode[i].getResolutionX(),
+			depthVideoMode[i].getResolutionY(),
+			depthVideoMode[i].getFps(),
+			depthVideoMode[i].getPixelFormat());
+			ss << tmp <<std::endl;
+		}
+		std::cout << ss.str();
+
         // depth‚ÆRGB‚ğsync‚³‚¹‚é
         device.setDepthColorSyncEnabled(true);
 
@@ -24,6 +55,7 @@ void main(int argc, char* argv[])
 
 
         openni::VideoStream colorStream;
+		
         colorStream.create( device, openni::SensorType::SENSOR_COLOR );
         colorStream.start();
 
