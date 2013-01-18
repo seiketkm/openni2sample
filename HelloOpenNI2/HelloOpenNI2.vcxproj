@@ -83,7 +83,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(OPENNI2_INCLUDE);$(NITE2_INCLUDE);C:\opencv243\build\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OPENNI2_INCLUDE);C:\opencv243\build\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -91,7 +91,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OpenNI2.lib;NITE2.lib;opencv_core243d.lib;opencv_highgui243d.lib;opencv_imgproc243d.lib</AdditionalDependencies>
+      <AdditionalDependencies>OpenNI2.lib;opencv_core243d.lib;opencv_highgui243d.lib;opencv_imgproc243d.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OPENNI2_LIB);C:\opencv243\build\x86\vc10\lib;$(NITE2_LIB)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

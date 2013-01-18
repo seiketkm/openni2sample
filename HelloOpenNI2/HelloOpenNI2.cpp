@@ -15,14 +15,6 @@ void main(int argc, char* argv[])
             throw std::runtime_error("can't open device");
         }
 
-        // depthÇ∆RGBÇsyncÇ≥ÇπÇÈ
-        device.setDepthColorSyncEnabled(true);
-
-        // depthÇ∆rgbÇèdÇÀçáÇÌÇπÇ∑ÇÈê›íËÇÁÇµÇ¢Ç™ìÆÇ¢ÇƒÇ»Ç¢ÅB
-        if(device.isImageRegistrationModeSupported(openni::IMAGE_REGISTRATION_DEPTH_TO_COLOR))
-            device.setImageRegistrationMode(openni::ImageRegistrationMode::IMAGE_REGISTRATION_DEPTH_TO_COLOR);
-
-
         openni::VideoStream colorStream;
         colorStream.create( device, openni::SensorType::SENSOR_COLOR );
         colorStream.start();
@@ -31,15 +23,18 @@ void main(int argc, char* argv[])
         depthStream.create( device, openni::SensorType::SENSOR_DEPTH );
         depthStream.start();
 
-        std::vector<openni::VideoStream*> streams;
-        streams.push_back( &colorStream );
-        streams.push_back( &depthStream );
+        // depthÇ∆RGBÇsyncÇ≥ÇπÇÈ
+        device.setDepthColorSyncEnabled(true);
+
+        // depthÇ∆rgbÇèdÇÀçáÇÌÇπÇ∑ÇÈ
+        if(device.isImageRegistrationModeSupported(openni::IMAGE_REGISTRATION_DEPTH_TO_COLOR))
+            device.setImageRegistrationMode(openni::IMAGE_REGISTRATION_DEPTH_TO_COLOR);
 
         cv::Mat colorImage;
         cv::Mat depthImage;
         cv::Mat depthoutputImage;
         cv::Mat maskImage;
-
+		cv::Mat mixImage;
         while ( 1 ) {
             openni::VideoFrameRef colorFrame;
             colorStream.readFrame( &colorFrame );
@@ -63,9 +58,17 @@ void main(int argc, char* argv[])
             }
 
             cv::imshow( "Depth Camera", depthoutputImage );
+			
+			cv::Mat nearMask, zeroMask;
+			cv::compare(depthImage, 2000, nearMask, CV_CMP_LT);
+			cv::compare(depthImage, 0, zeroMask, CV_CMP_GT);
+			cv::bitwise_and(nearMask, zeroMask, nearMask);
+			mixImage.setTo(0);
+			colorImage.copyTo(mixImage, nearMask);
+			cv::imshow("Mix Image", mixImage);
 
             int key = cv::waitKey( 10 );
-            if ( key == 'q'  || key == 0x1b) {
+			if ( key == 'q'  || key == VK_ESCAPE) {
                 break;
             }
         }
